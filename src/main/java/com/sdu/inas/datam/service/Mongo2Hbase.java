@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 
-
+//从mongo取出数据存到Hbase中
 @Service
 public class Mongo2Hbase {
 
@@ -33,51 +33,62 @@ public class Mongo2Hbase {
     EventRepository eventRepository;
 
     public void transData() throws IOException {
-
-
         ArrayList<Doc> allDoc = mongoDao.getAllDoc();
         int i = 0;
         for (Doc doc : allDoc) {
             i++;
-            if (i < 9665) {
+            /**
+             * 447,683,1235,1678,1690,1774,2182
+             */
+          /*  if (i < 1774) {
 
-            } else {
-                List<String> pName = doc.getPName();
-                System.out.println("---------------------------------------------------");
-                System.out.println("开始插入第 " + i + " 个事件");
-                for (String s : pName) {
-                    System.out.println("实体名称： " + s);
-                    String realName = s + " ";
-                    String basicInfo = mongoDao.getBasicInfo(s);
-                    if (basicInfo.length() < 20) {
-                        realName = s + " " + basicInfo;
-                    }
-                    List<String> objs = getObIdByPrefix(s);
-                    List<String> sName = doc.getSName();
-                    StringBuilder site = new StringBuilder();
-                    for (String sn : sName) {
-                        site.append(sn);
-                        site.append(" ");
-                    }
-                    if (objs.size() == 0) {
-                        System.out.println("库内不存在该实体，正在创建");
-                        String objectId = s + CommonUtil.genRandomNum();
+            } */
+            //System.out.println(doc.getDate().substring(0,1));
+            //如果日期为公元前，则经过处理得:doc.getDate()="Not Found",故取"N"
+            if ("N".equals(doc.getDate().substring(0, 1))) {
+                System.out.println(doc.getDate().substring(0, 1));
+                continue;
+            }
+            List<String> pName = doc.getPName();
+            System.out.println("---------------------------------------------------");
+            System.out.println("开始插入第 " + i + " 个事件");
+            for (String s : pName) {
+                System.out.println("实体名称： " + s);
+                String realName = s + " ";
+                String basicInfo = mongoDao.getBasicInfo(s);
+                if (basicInfo.length() < 20) {
+                    realName = s + " " + basicInfo;
+                }
+                List<String> objs = getObIdByPrefix(s);
+                List<String> sName = doc.getSName();
+                StringBuilder site = new StringBuilder();
+                for (String sn : sName) {
+                    site.append(sn);
+                    site.append(" ");
+                }
+                if (objs.size() == 0) {
+                    System.out.println("库内不存在该实体，正在创建");
+                    String objectId = s + CommonUtil.genRandomNum();
 
-                        insertRealName(realName, objectId);
-                        String eventId = CommonUtil.getUUID();
-                        insertEvent(objectId, new Event(eventId, objectId, "2050-01-01", "", realName, ""));
+                    insertRealName(realName, objectId);
+                    String eventId = CommonUtil.getUUID();
+                    //String eventId=new ObjectId().toHexString();
+                    insertEvent(objectId, new Event(eventId, objectId, "2050-01-01", "", realName, ""));
+                    Event event = new Event(CommonUtil.getUUID(), objectId, doc.getDate(), site.toString(), doc.getDetails(), "");
+                    //Event event = new Event(doc.get_id(), objectId, doc.getDate(), site.toString(), doc.getDetails(), "");
+
+                    insertEvent(objectId, event);
+                    System.out.println("插入第 " + i + " 个事件中 " + s + " 成功");
+                } else {
+                    String objectId = getRightOne(objs, s);
+                    if (objectId != null) {
                         Event event = new Event(CommonUtil.getUUID(), objectId, doc.getDate(), site.toString(), doc.getDetails(), "");
+                        //Event event = new Event(doc.get_id(), objectId, doc.getDate(), site.toString(), doc.getDetails(), "");
+
                         insertEvent(objectId, event);
                         System.out.println("插入第 " + i + " 个事件中 " + s + " 成功");
                     } else {
-                        String objectId = getRightOne(objs, s);
-                        if (objectId != null) {
-                            Event event = new Event(CommonUtil.getUUID(), objectId, doc.getDate(), site.toString(), doc.getDetails(), "");
-                            insertEvent(objectId, event);
-                            System.out.println("插入第 " + i + " 个事件中 " + s + " 成功");
-                        } else {
-                            System.out.println("返回列表中未发现该实体，" + "插入第 " + i + " 个事件中 " + s + " 失败");
-                        }
+                        System.out.println("返回列表中未发现该实体，" + "插入第 " + i + " 个事件中 " + s + " 失败");
                     }
                 }
             }
@@ -106,7 +117,8 @@ public class Mongo2Hbase {
                         realName = pName + " " + basicInfo;
                     }
                     insertRealName(realName, objectId);
-                    String eventId = CommonUtil.getUUID();
+                    //String eventId = CommonUtil.getUUID();
+                    String eventId = new ObjectId().toHexString();
                     insertEvent(objectId, new Event(eventId, objectId, "2050-01-01", "", realName, ""));
                     addRawText(person.getPBaseInfo(), objectId);
                     System.out.println("插入第 " + i + " 个实体 " + objectId + " 的原始信息成功");
@@ -140,12 +152,27 @@ public class Mongo2Hbase {
         System.out.println(info);
     }
 
+
     public static void main(String[] args) {
-        String s1 = "1998/11/3";
+        int[] integers = {1, 2, 3, 4};
+
+        String[] ss = {"-1990", "1000"};
+        for (String s : ss) {
+            for (int i : integers) {
+                if ("N".equals(s.substring(0, 1))) {
+                    System.out.println(s);
+                    System.out.println(i);
+                    continue;
+                }
+                System.out.println(i);
+            }
+        }
+
+       /* String s1 = "1998/11/3";
         String s2 = "曹操";
         String replace = s1.replace("/", "-");
         System.out.println(replace);
-        System.out.println(s1.compareTo(s2));
+        System.out.println(s1.compareTo(s2));*/
     }
 
 

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
+/**
+ * @author J
+ */
 @Repository
 public interface EventRepository extends ElasticsearchRepository<Event,String> {
 

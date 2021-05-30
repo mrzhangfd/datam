@@ -11,7 +11,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class HbaseModelUtil {
 
-    public static final String BASICTABLE ="Object";
+    //public static final String BASICTABLE ="Object";
 
     public static final String BASIC_TABLE ="Object";
 

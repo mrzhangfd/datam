@@ -11,9 +11,9 @@ public class HbaseModel {
 
     private String row;
 
-    private  String familyName;
+    private String familyName;
 
-    private  String qualifier;
+    private String qualifier;
 
     private String value;
 

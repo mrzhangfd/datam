@@ -1,31 +1,25 @@
 package com.sdu.inas.datam.bean;
 
-
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 对应Mongdb中的person表
- * @author J
+ * 对应Mongodb中的newevent
+ *
+ * @author icatzfd
+ * Created on 2020/5/21 16:48.
  */
 @Data
-public class Person {
-
-    String _id;
-    String pName;
-    List<String> Names = new ArrayList<>();
-    String pBaseInfo;
-
-    public Person() {
-    }
-
-    public Person(String pName, List<String> names, String pBasicInfo) {
-        this.pName = pName;
-        this.Names = names;
-        this.pBaseInfo = pBasicInfo;
-    }
+public class NewEvent {
+    private String _id;
+    private String obj_id;
+    private String date;
+    private String eventIntro;
+    private String eventDetail;
+    private List<String> pName = new ArrayList<>();
+    private List<String> sName = new ArrayList<>();
 
     /**
      * Mongodb会自动生成ObjectId

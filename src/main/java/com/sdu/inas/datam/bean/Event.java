@@ -4,7 +4,11 @@ import com.google.common.base.MoreObjects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-@Document(indexName = "event",type = "simple")
+/**
+ * 对应ES中的event表
+ * @author J
+ */
+@Document(indexName = "event", type = "simple")
 public class Event {
 
     @Id
@@ -87,15 +91,16 @@ public class Event {
                 .toString();
     }
 
-    public String packEventLabel(){
+    public String packEventLabel() {
         StringBuilder sb = new StringBuilder();
-        sb.append("时间 "+ts+"  地点 "+site+"||");
-        sb.append("详情 "+details+"||");
+        sb.append("时间 " + ts + "  地点 " + site + "||");
+        sb.append("详情 " + details + "||");
         return sb.toString();
     }
-    public String pack(){
+
+    public String pack() {
         StringBuilder sb = new StringBuilder();
-        sb.append(ts+" "+details);
+        sb.append(ts + " " + details);
         return sb.toString();
     }
 }

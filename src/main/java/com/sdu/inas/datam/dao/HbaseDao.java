@@ -1,6 +1,7 @@
 package com.sdu.inas.datam.dao;
 
 
+import com.sdu.inas.datam.bean.RealEntity;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.Filter;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by J on  17-10-23.
+ *
+ * @author J
+ * @date 17-10-23
  */
 
 @Repository
@@ -137,4 +140,36 @@ public class HbaseDao {
         });
     }
 
+
+    /**
+     * 根据表名，扫描全表
+     * @param tableName 表名
+     * @return 扫描结果的列表
+     */
+    public  List<Result> findAll(String tableName){
+        return hbaseTemplate.execute(tableName, new TableCallback<List<Result>>() {
+            List<Result> list = new ArrayList<>();
+            @Override
+            public List<Result> doInTable(HTableInterface hTableInterface) throws Throwable {
+                //Filter pf = new PrefixFilter(Bytes.toBytes(keyBegin));
+                Scan scan = new Scan();
+                //scan.setFilter(pf);
+                ResultScanner rs = hTableInterface.getScanner(scan);
+                for(Result result:rs){
+                    RealEntity realEntity = new RealEntity();
+                    //System.out.println(Bytes.toString(result.getRow()));
+                    list.add(result);
+                    /*realEntity.setObjectId(Bytes.toString(result.getRow()));
+                    for (KeyValue kv : result.list()) {
+                        HbaseModel hbaseModel = HbaseModelUtil.kvToHbaseModel(kv);
+                        realEntity = packModelFromEs(realEntity, hbaseModel);
+                    }
+                    ArrayList<Event> events = result.getEvents();*/
+
+                }
+                return list;
+            }
+        });
+
+    }
 }

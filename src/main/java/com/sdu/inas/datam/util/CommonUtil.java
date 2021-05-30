@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 
 /**
- * Created by J on  17-10-23.
+ * @author J
+ * @date 17-10-23
  */
 
 public class CommonUtil {
@@ -90,7 +91,7 @@ public class CommonUtil {
     }
 
 
-    public static String fillTime (String s) {
+    public static String fillTime(String s) {
 
         ArrayList<String> tt = new ArrayList<>();
         tt.add("年");
@@ -113,7 +114,7 @@ public class CommonUtil {
     }
 
     public static void main(String[] args) {
-        String s = fillTime("1996-8-2");
+        String s = fillTime("-221-10-1");
         System.out.println(s);
     }
 }

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author J
+ */
 public class RealEntity {
 
     private String objectId;
